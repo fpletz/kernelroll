@@ -1,8 +1,17 @@
 # Putting rickrolling in kernel space
 
-Kernelroll is a linux kernel module for advanced rickrolling. It patches
-the open system call to play a specified music file instead of other
-music files.
+Kernelroll is a linux kernel module for advanced rickrolling.
+
+It works by patching the open() system call to open a specified music file
+instead of other music files. Currently, it only checks if the file extension
+"mp3" is present and calls the original open() with the supplied path
+instead.
+
+WARNING: There is probably a performance penalty and your kernel might crash
+at a very inappropriate time and cause data loss! You are responsible for
+the code you load into your kernel!
+
+But most probably, it will be alright! ;)
 
 # Installation
 
@@ -28,4 +37,5 @@ Load with:
 
     $ insmod kernelroll.ko rollfile=/path/to/rickroll.mp3
 
-Fire up a music player of your choice and consider yourself rickrolled. ;)
+Fire up a music player of your choice, play a song and consider yourself
+kernelrolled. ;)
