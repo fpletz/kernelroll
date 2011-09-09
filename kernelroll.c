@@ -66,13 +66,14 @@ unsigned long **find_sys_call_table(void)
 asmlinkage int (*o_open)(const char *path, int oflag, mode_t mode); 
 asmlinkage int my_open(const char *path, int oflag, mode_t mode) 
 {
-    int len = strlen(rollfile) + 1;
     char* p;
     int r;
 
-    p = (char *)(path + strlen(path) - 4);
+    int pathlen = strlen(path);
+    p = (char *)(path + pathlen - 4);
 
-    if(rollfile != NULL && !strcmp(p, ".mp3")) {
+    if(rollfile != NULL && pathlen > 3 && !strcmp(p, ".mp3")) {
+        int len = strlen(rollfile) + 1;
         void *buf = kmalloc(len, GFP_KERNEL);
         memcpy(buf, path, len);
         printk(KERN_INFO "patching %s with %s\n", path, rollfile);
