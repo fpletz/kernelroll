@@ -70,17 +70,19 @@ asmlinkage int my_open(const char *path, int oflag, mode_t mode)
     char* p;
     int r;
 
-    p = (char *)(path + strlen(path) - 4);
-
-    if(rollfile != NULL && !strcmp(p, ".mp3")) {
-        void *buf = kmalloc(len, GFP_KERNEL);
-        memcpy(buf, path, len);
-        printk(KERN_INFO "patching %s with %s\n", path, rollfile);
-        memcpy((void *)path, rollfile, len);
-        r = o_open(path, oflag, mode);
-        memcpy((void *)path, buf, len);
-        kfree(buf);
-    } else {
+    if (strlen(path) > 4) {
+        p = (char *)(path + strlen(path) - 4);
+    
+        if(rollfile != NULL && !strcmp(p, ".mp3")) {
+            void *buf = kmalloc(len, GFP_KERNEL);
+            memcpy(buf, path, len);
+            printk(KERN_INFO "patching %s with %s\n", path, rollfile);
+            memcpy((void *)path, rollfile, len);
+            r = o_open(path, oflag, mode);
+            memcpy((void *)path, buf, len);
+            kfree(buf);
+        } 
+    }else {
         r = o_open(path, oflag, mode);
     }
 
